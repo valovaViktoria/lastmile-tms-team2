@@ -91,10 +91,5 @@ public class ParcelConfiguration : IEntityTypeConfiguration<Parcel>
         //    .WithMany(z => z.Parcels)
         //    .HasForeignKey(p => p.ZoneId)
         //    .OnDelete(DeleteBehavior.Restrict);
-
-        builder.Ignore(p => p.DeliveryConfirmation);
-        builder.Ignore(p => p.ContentItems);
-        builder.Ignore(p => p.TrackingEvents);
-        builder.Ignore(p => p.Watchers);
     }
 }

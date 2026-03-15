@@ -54,8 +54,5 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         builder.HasIndex(a => a.PostalCode);
         builder.HasIndex(a => a.City);
         builder.HasIndex(a => new { a.City, a.State });
-
-        builder.Ignore(a => a.ShipperParcels);
-        builder.Ignore(a => a.RecipientParcels);
     }
 }
