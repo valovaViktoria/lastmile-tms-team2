@@ -10,7 +10,7 @@ public class Address : BaseAuditableEntity
     public string City { get; set; } = string.Empty;
     public string State { get; set; } = string.Empty;
     public string PostalCode { get; set; } = string.Empty;
-    public string CountryCode { get; set; } = "US";
+    public string CountryCode { get; set; } = string.Empty;
     public bool IsResidential { get; set; }
     public string? ContactName { get; set; }
     public string? CompanyName { get; set; }

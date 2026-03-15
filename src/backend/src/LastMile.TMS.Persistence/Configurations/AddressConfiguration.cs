@@ -14,10 +14,10 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
 
         builder.Property(a => a.Street1)
             .IsRequired()
-            .HasMaxLength(500);
+            .HasMaxLength(200);
 
         builder.Property(a => a.Street2)
-            .HasMaxLength(500);
+            .HasMaxLength(200);
 
         builder.Property(a => a.City)
             .IsRequired()
@@ -33,23 +33,25 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
 
         builder.Property(a => a.CountryCode)
             .IsRequired()
-            .HasMaxLength(3)
-            .HasDefaultValue("US");
+            .HasMaxLength(3);
 
         builder.Property(a => a.IsResidential)
             .HasDefaultValue(false);
 
         builder.Property(a => a.ContactName)
-            .HasMaxLength(200);
+            .HasMaxLength(150);
 
         builder.Property(a => a.CompanyName)
             .HasMaxLength(200);
 
         builder.Property(a => a.Phone)
-            .HasMaxLength(50);
+            .HasMaxLength(20);
 
         builder.Property(a => a.Email)
-            .HasMaxLength(200);
+            .HasMaxLength(254);
+
+        builder.Property(a => a.GeoLocation)
+            .HasColumnType("geometry (point, 4326)");
 
         builder.HasIndex(a => a.PostalCode);
         builder.HasIndex(a => a.City);
