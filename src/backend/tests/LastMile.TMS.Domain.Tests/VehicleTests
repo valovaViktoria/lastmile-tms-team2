@@ -1,6 +1,6 @@
+using FluentAssertions;
 using LastMile.TMS.Domain.Entities;
 using LastMile.TMS.Domain.Enums;
-using Xunit;
 
 namespace LastMile.TMS.Domain.Tests;
 
@@ -26,13 +26,13 @@ public class VehicleTests
             Depot = depot
         };
 
-        Assert.Equal("AA1234BB", vehicle.RegistrationPlate);
-        Assert.Equal(VehicleType.Van, vehicle.Type);
-        Assert.Equal(150, vehicle.ParcelCapacity);
-        Assert.Equal(1200m, vehicle.WeightCapacity);
-        Assert.Equal(VehicleStatus.Available, vehicle.Status);
-        Assert.Equal(depot.Id, vehicle.DepotId);
-        Assert.Equal(depot, vehicle.Depot);
+        vehicle.RegistrationPlate.Should().Be("AA1234BB");
+        vehicle.Type.Should().Be(VehicleType.Van);
+        vehicle.ParcelCapacity.Should().Be(150);
+        vehicle.WeightCapacity.Should().Be(1200m);
+        vehicle.Status.Should().Be(VehicleStatus.Available);
+        vehicle.DepotId.Should().Be(depot.Id);
+        vehicle.Depot.Should().Be(depot);
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class VehicleTests
             Status = VehicleStatus.Maintenance
         };
 
-        Assert.Equal(VehicleStatus.Maintenance, vehicle.Status);
+        vehicle.Status.Should().Be(VehicleStatus.Maintenance);
     }
 
     [Fact]
@@ -62,6 +62,6 @@ public class VehicleTests
             Status = VehicleStatus.InUse
         };
 
-        Assert.Equal(VehicleType.Bike, vehicle.Type);
+        vehicle.Type.Should().Be(VehicleType.Bike);
     }
 }

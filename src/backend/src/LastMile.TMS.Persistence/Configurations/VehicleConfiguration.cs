@@ -26,6 +26,7 @@ public class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .IsRequired();
 
         builder.Property(x => x.WeightCapacity)
+            .HasPrecision(18, 4)
             .IsRequired();
 
         builder.Property(x => x.Status)

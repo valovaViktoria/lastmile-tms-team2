@@ -15,6 +15,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Zone> Zones => Set<Zone>();
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<Vehicle> Vehicles => Set<Vehicle>();
+    public DbSet<Driver> Drivers => Set<Driver>();
+    public DbSet<DriverAvailability> DriverAvailabilities => Set<DriverAvailability>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
