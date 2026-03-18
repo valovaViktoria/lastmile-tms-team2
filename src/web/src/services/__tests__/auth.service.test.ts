@@ -2,7 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { loginWithPassword, refreshAccessToken } from "../auth.service";
 
 // Mock fetch globally
-global.fetch = vi.fn();
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 describe("auth.service", () => {
   beforeEach(() => {
@@ -18,7 +19,7 @@ describe("auth.service", () => {
         refresh_token: "mock_refresh_token",
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse,
       });
@@ -41,7 +42,7 @@ describe("auth.service", () => {
         error_description: "Invalid credentials",
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         json: async () => mockError,
       });
@@ -60,7 +61,7 @@ describe("auth.service", () => {
         expires_in: 3600,
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => mockResponse,
       });
@@ -76,7 +77,7 @@ describe("auth.service", () => {
         error_description: "Refresh token expired",
       };
 
-      (global.fetch as any).mockResolvedValueOnce({
+      mockFetch.mockResolvedValueOnce({
         ok: false,
         json: async () => mockError,
       });

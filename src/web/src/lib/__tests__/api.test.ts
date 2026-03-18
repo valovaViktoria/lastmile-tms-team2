@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { apiFetch } from "../api";
 
-global.fetch = vi.fn();
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
 
 describe("apiFetch", () => {
   beforeEach(() => {
@@ -11,7 +12,7 @@ describe("apiFetch", () => {
   it("should fetch data successfully", async () => {
     const mockData = { id: 1, name: "Test" };
 
-    (global.fetch as any).mockResolvedValueOnce({
+    mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => mockData,
     });
@@ -30,7 +31,7 @@ describe("apiFetch", () => {
   });
 
   it("should throw error on failed request", async () => {
-    (global.fetch as any).mockResolvedValueOnce({
+    mockFetch.mockResolvedValueOnce({
       ok: false,
       status: 404,
     });
