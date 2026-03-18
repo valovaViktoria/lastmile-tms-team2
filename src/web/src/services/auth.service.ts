@@ -1,6 +1,11 @@
 import type { TokenResponse, TokenErrorResponse } from "@/types/auth";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://localhost:61615";
+// Use internal Docker network URL for server-side requests, public URL for client-side
+const isServer = typeof window === "undefined";
+const API_BASE_URL =
+  isServer
+    ? process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL!
+    : process.env.NEXT_PUBLIC_API_URL!;
 
 /**
  * Authenticate with username/password via OpenIddict password grant.
