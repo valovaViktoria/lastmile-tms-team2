@@ -1,0 +1,81 @@
+using LastMile.TMS.Application.Depots.Commands;
+using LastMile.TMS.Application.Depots.DTOs;
+using MediatR;
+
+namespace LastMile.TMS.Api.GraphQL.Mutations;
+
+public class DepotMutation
+{
+    public async Task<DepotDto> CreateDepot(
+        CreateDepotInput input,
+        [Service] ISender mediator = null!,
+        CancellationToken cancellationToken = default)
+    {
+        var address = new AddressDto(
+            input.Address.Street1,
+            input.Address.Street2,
+            input.Address.City,
+            input.Address.State,
+            input.Address.PostalCode,
+            input.Address.CountryCode,
+            input.Address.IsResidential,
+            input.Address.ContactName,
+            input.Address.CompanyName,
+            input.Address.Phone,
+            input.Address.Email);
+
+        List<OperatingHoursDto>? operatingHours = null;
+        if (input.OperatingHours is not null)
+        {
+            operatingHours = input.OperatingHours.Select(h => new OperatingHoursDto(
+                h.DayOfWeek, h.OpenTime, h.ClosedTime, h.IsClosed)).ToList();
+        }
+
+        return await mediator.Send(
+            new CreateDepotCommand(input.Name, address, operatingHours, input.IsActive),
+            cancellationToken);
+    }
+
+    public async Task<DepotDto?> UpdateDepot(
+        Guid id,
+        UpdateDepotInput input,
+        [Service] ISender mediator = null!,
+        CancellationToken cancellationToken = default)
+    {
+        AddressDto? address = null;
+        if (input.Address is not null)
+        {
+            address = new AddressDto(
+                input.Address.Street1,
+                input.Address.Street2,
+                input.Address.City,
+                input.Address.State,
+                input.Address.PostalCode,
+                input.Address.CountryCode,
+                input.Address.IsResidential,
+                input.Address.ContactName,
+                input.Address.CompanyName,
+                input.Address.Phone,
+                input.Address.Email);
+        }
+
+        List<OperatingHoursDto>? operatingHours = null;
+        if (input.OperatingHours is not null)
+        {
+            operatingHours = input.OperatingHours.Select(h => new OperatingHoursDto(
+                h.DayOfWeek, h.OpenTime, h.ClosedTime, h.IsClosed)).ToList();
+        }
+
+        return await mediator.Send(
+            new UpdateDepotCommand(id, input.Name, address, operatingHours, input.IsActive),
+            cancellationToken);
+    }
+
+    public async Task<bool> DeleteDepot(
+        Guid id,
+        [Service] ISender mediator = null!,
+        CancellationToken cancellationToken = default)
+    {
+        return await mediator.Send(new DeleteDepotCommand(id), cancellationToken);
+    }
+}
