@@ -17,6 +17,7 @@ public class CreateRouteCommandValidator : AbstractValidator<CreateRouteCommand>
             .GreaterThanOrEqualTo(0);
 
         RuleFor(x => x.Dto.ParcelIds)
-            .NotNull();
+            .NotNull()
+            .NotEmpty();
     }
 }

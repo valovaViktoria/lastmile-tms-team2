@@ -76,6 +76,20 @@ public class CreateRouteCommandHandler(
             throw new InvalidOperationException(
                 "Driver is already assigned to a planned or in-progress route that overlaps the requested time.");
 
+        // Same overlap rule as for the driver: vehicle cannot serve two active routes in the same window.
+        var vehicleHasOverlappingRoute = await dbContext.Routes
+            .AsNoTracking()
+            .AnyAsync(
+                r => r.VehicleId == request.Dto.VehicleId
+                    && (r.Status == RouteStatus.Planned || r.Status == RouteStatus.InProgress)
+                    && r.StartDate < requestedEndExclusive
+                    && requestedStart < (r.EndDate ?? DateTimeOffset.MaxValue),
+                cancellationToken);
+
+        if (vehicleHasOverlappingRoute)
+            throw new InvalidOperationException(
+                "Vehicle is already assigned to a planned or in-progress route that overlaps the requested time.");
+
         // Create route
         var now = DateTimeOffset.UtcNow;
         var route = new Route
