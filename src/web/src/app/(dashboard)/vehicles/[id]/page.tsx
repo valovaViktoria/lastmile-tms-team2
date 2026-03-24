@@ -1,7 +1,8 @@
 "use client";
 
-import { use, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import {
   ArrowLeft,
   CircleCheck,
@@ -171,12 +172,8 @@ function VehicleRouteHistory({ vehicleId }: { vehicleId: string }) {
   );
 }
 
-export default function VehicleDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function VehicleDetailPage() {
+  const { id } = useParams<{ id: string }>();
   const { status: sessionStatus } = useSession();
 
   const { data: vehicle, isLoading, error } = useVehicle(id);

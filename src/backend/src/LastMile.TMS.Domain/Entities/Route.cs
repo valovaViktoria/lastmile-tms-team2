@@ -35,4 +35,17 @@ public class Route : BaseAuditableEntity
     /// Number of parcels assigned to this route
     /// </summary>
     public int ParcelCount => Parcels?.Count ?? 0;
+
+    /// <summary>
+    /// Half-open intervals [start, end): a null end means unbounded forward.
+    /// Used for scheduling conflict checks; keep in sync with queries that use the same rules.
+    /// </summary>
+    public static bool TimeRangesOverlap(
+        DateTimeOffset startA, DateTimeOffset? endA,
+        DateTimeOffset startB, DateTimeOffset? endB)
+    {
+        var endAExclusive = endA ?? DateTimeOffset.MaxValue;
+        var endBExclusive = endB ?? DateTimeOffset.MaxValue;
+        return startA < endBExclusive && startB < endAExclusive;
+    }
 }

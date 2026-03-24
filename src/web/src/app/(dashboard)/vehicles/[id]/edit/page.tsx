@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState, use } from "react";
-import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, PencilLine } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -238,12 +238,8 @@ function VehicleEditForm({
   );
 }
 
-export default function EditVehiclePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+export default function EditVehiclePage() {
+  const { id } = useParams<{ id: string }>();
   const { status: sessionStatus } = useSession();
   const { data: vehicle, isLoading } = useVehicle(id);
 

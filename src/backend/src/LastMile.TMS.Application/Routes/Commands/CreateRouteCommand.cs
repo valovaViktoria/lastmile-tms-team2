@@ -59,6 +59,23 @@ public class CreateRouteCommandHandler(
         if (driver is null)
             throw new InvalidOperationException("Driver not found");
 
+        // Prevent double-booking: same driver cannot have overlapping active routes.
+        // CreateRouteDto has no end time; treat the new route as [StartDate, +∞). Must match Route.TimeRangesOverlap semantics.
+        var requestedStart = request.Dto.StartDate;
+        var requestedEndExclusive = DateTimeOffset.MaxValue;
+        var driverHasOverlappingRoute = await dbContext.Routes
+            .AsNoTracking()
+            .AnyAsync(
+                r => r.DriverId == request.Dto.DriverId
+                    && (r.Status == RouteStatus.Planned || r.Status == RouteStatus.InProgress)
+                    && r.StartDate < requestedEndExclusive
+                    && requestedStart < (r.EndDate ?? DateTimeOffset.MaxValue),
+                cancellationToken);
+
+        if (driverHasOverlappingRoute)
+            throw new InvalidOperationException(
+                "Driver is already assigned to a planned or in-progress route that overlaps the requested time.");
+
         // Create route
         var now = DateTimeOffset.UtcNow;
         var route = new Route
