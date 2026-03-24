@@ -11,7 +11,7 @@ public class ZoneMutation
 {
     public async Task<ZoneDto> CreateZone(
         CreateZoneInput input,
-        [ScopedService] IMediator mediator,
+        [Service] ISender mediator = null!,
         CancellationToken cancellationToken = default)
     {
         return await mediator.Send(
@@ -28,7 +28,7 @@ public class ZoneMutation
     public async Task<ZoneDto?> UpdateZone(
         Guid id,
         UpdateZoneInput input,
-        [ScopedService] IMediator mediator,
+        [Service] ISender mediator = null!,
         CancellationToken cancellationToken = default)
     {
         return await mediator.Send(
@@ -45,7 +45,7 @@ public class ZoneMutation
 
     public async Task<bool> DeleteZone(
         Guid id,
-        [ScopedService] IMediator mediator,
+        [Service] ISender mediator = null!,
         CancellationToken cancellationToken = default)
     {
         return await mediator.Send(new DeleteZoneCommand(id), cancellationToken);

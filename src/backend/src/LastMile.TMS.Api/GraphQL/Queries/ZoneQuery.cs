@@ -9,7 +9,7 @@ namespace LastMile.TMS.Api.GraphQL.Queries;
 public class ZoneQuery
 {
     public async Task<List<ZoneDto>> GetZones(
-        [Service] IMediator mediator,
+        [Service] ISender mediator = null!,
         CancellationToken cancellationToken = default)
     {
         return await mediator.Send(new GetAllZonesQuery(), cancellationToken);
@@ -17,7 +17,7 @@ public class ZoneQuery
 
     public async Task<ZoneDto?> GetZone(
         Guid id,
-        [Service] IMediator mediator,
+        [Service] ISender mediator = null!,
         CancellationToken cancellationToken = default)
     {
         return await mediator.Send(new GetZoneByIdQuery(id), cancellationToken);

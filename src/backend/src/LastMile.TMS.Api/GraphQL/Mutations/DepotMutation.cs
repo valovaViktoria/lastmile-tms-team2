@@ -31,7 +31,7 @@ public class DepotMutation
         if (input.OperatingHours is not null)
         {
             operatingHours = input.OperatingHours.Select(h => new OperatingHoursDto(
-                h.DayOfWeek, h.OpenTime?.ToString("HH:mm"), h.ClosedTime?.ToString("HH:mm"), h.IsClosed)).ToList();
+                h.DayOfWeek, h.OpenTime, h.ClosedTime, h.IsClosed)).ToList();
         }
 
         return await mediator.Send(
@@ -66,7 +66,7 @@ public class DepotMutation
         if (input.OperatingHours is not null)
         {
             operatingHours = input.OperatingHours.Select(h => new OperatingHoursDto(
-                h.DayOfWeek, h.OpenTime?.ToString("HH:mm"), h.ClosedTime?.ToString("HH:mm"), h.IsClosed)).ToList();
+                h.DayOfWeek, h.OpenTime, h.ClosedTime, h.IsClosed)).ToList();
         }
 
         return await mediator.Send(

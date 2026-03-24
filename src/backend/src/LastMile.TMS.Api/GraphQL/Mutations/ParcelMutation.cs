@@ -11,7 +11,7 @@ public class ParcelMutation
 {
     public async Task<ParcelDto> RegisterParcel(
         RegisterParcelInput input,
-        [Service] IMediator mediator,
+        [Service] ISender mediator = null!,
         CancellationToken cancellationToken = default)
     {
         return await mediator.Send(
