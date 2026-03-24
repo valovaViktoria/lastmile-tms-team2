@@ -1,4 +1,5 @@
 using LastMile.TMS.Application.Common.Interfaces;
+using LastMile.TMS.Application.Parcels.Services;
 using LastMile.TMS.Application.Zones.Services;
 using LastMile.TMS.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,10 @@ public static class DependencyInjection
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IZoneBoundaryParser, ZoneBoundaryParser>();
+
+        // Parcel registration — geocoding and zone matching
+        services.AddHttpClient<IGeocodingService, NominatimGeocodingService>();
+        services.AddScoped<IZoneMatchingService, ZoneMatchingService>();
 
         var accessTokenMinutes = configuration.GetValue("Authentication:AccessTokenLifetimeMinutes", 60);
         var refreshTokenDays = configuration.GetValue("Authentication:RefreshTokenLifetimeDays", 14);
