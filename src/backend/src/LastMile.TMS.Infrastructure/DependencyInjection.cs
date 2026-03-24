@@ -1,6 +1,7 @@
 using LastMile.TMS.Application.Common.Interfaces;
 using LastMile.TMS.Application.Parcels.Services;
 using LastMile.TMS.Application.Zones.Services;
+using LastMile.TMS.Infrastructure.Options;
 using LastMile.TMS.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +13,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var disableExternalInfrastructure = configuration.GetValue("Testing:DisableExternalInfrastructure", false);
+
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IZoneBoundaryParser, ZoneBoundaryParser>();
@@ -19,6 +22,21 @@ public static class DependencyInjection
         // Parcel registration — geocoding and zone matching
         services.AddHttpClient<IGeocodingService, NominatimGeocodingService>();
         services.AddScoped<IZoneMatchingService, ZoneMatchingService>();
+
+        if (disableExternalInfrastructure)
+        {
+            services.AddScoped<IUserAccountEmailJobScheduler, NoOpUserAccountEmailJobScheduler>();
+        }
+        else
+        {
+            services.AddScoped<IUserAccountEmailJobScheduler, HangfireUserAccountEmailJobScheduler>();
+        }
+
+        services.AddScoped<IUserAccountEmailService, UserAccountEmailService>();
+        services.AddScoped<UserAccountEmailBackgroundJob>();
+        services.Configure<EmailOptions>(configuration.GetSection("Email"));
+        services.Configure<FrontendOptions>(configuration.GetSection("Frontend"));
+        services.Configure<TestingOptions>(configuration.GetSection("Testing"));
 
         var accessTokenMinutes = configuration.GetValue("Authentication:AccessTokenLifetimeMinutes", 60);
         var refreshTokenDays = configuration.GetValue("Authentication:RefreshTokenLifetimeDays", 14);
@@ -58,6 +76,8 @@ public static class DependencyInjection
             {
                 // Validate tokens issued by the local OpenIddict server
                 options.UseLocalServer();
+                options.EnableAuthorizationEntryValidation();
+                options.EnableTokenEntryValidation();
                 options.UseAspNetCore();
             });
 
