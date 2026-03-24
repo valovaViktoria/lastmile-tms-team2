@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { LogOut, Truck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,18 @@ function userInitials(user: DashboardHeaderProps["user"]): string {
   return raw.slice(0, 2).toUpperCase() || "?";
 }
 
+function isHeaderLinkActive(pathname: string, href: string): boolean {
+  if (href === "/dashboard") {
+    return pathname === href;
+  }
+
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
 export function DashboardHeader({ user }: DashboardHeaderProps) {
+  const pathname = usePathname();
+  const isAdmin = user.roles?.includes("Admin");
+
   return (
     <div
       className={cn(
@@ -33,22 +45,38 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
         dashboardHeaderEdgeGutterClass,
       )}
     >
-      <Link
-        href="/dashboard"
-        className="group flex min-w-0 shrink-0 items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
-      >
-        <span className="flex size-9 items-center justify-center rounded-xl bg-white text-neutral-950 shadow-md transition-transform group-hover:scale-[1.02]">
-          <Truck className="size-[18px]" strokeWidth={2.25} aria-hidden />
-        </span>
-        <span className="hidden min-[400px]:flex flex-col leading-none">
-          <span className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-neutral-50">
-            Last Mile
+      <div className="flex min-w-0 items-center gap-3 sm:gap-4">
+        <Link
+          href="/dashboard"
+          className="group flex min-w-0 shrink-0 items-center gap-2.5 outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+        >
+          <span className="flex size-9 items-center justify-center rounded-xl bg-white text-neutral-950 shadow-md transition-transform group-hover:scale-[1.02]">
+            <Truck className="size-[18px]" strokeWidth={2.25} aria-hidden />
           </span>
-          <span className="mt-0.5 text-[10px] font-medium uppercase tracking-widest text-neutral-500">
-            TMS
+          <span className="hidden min-[400px]:flex flex-col leading-none">
+            <span className="font-mono text-[13px] font-semibold uppercase tracking-[0.12em] text-neutral-50">
+              Last Mile
+            </span>
+            <span className="mt-0.5 text-[10px] font-medium uppercase tracking-widest text-neutral-500">
+              TMS
+            </span>
           </span>
-        </span>
-      </Link>
+        </Link>
+
+        <nav className="hidden items-center gap-1 md:flex">
+          <HeaderLink
+            href="/dashboard"
+            isActive={isHeaderLinkActive(pathname, "/dashboard")}
+          >
+            Dashboard
+          </HeaderLink>
+          {isAdmin ? (
+            <HeaderLink href="/users" isActive={isHeaderLinkActive(pathname, "/users")}>
+              Users
+            </HeaderLink>
+          ) : null}
+        </nav>
+      </div>
 
       <div className="flex min-w-0 shrink items-center gap-2 sm:gap-8">
         <div
@@ -61,11 +89,11 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
           <p className="truncate text-sm font-medium leading-tight text-neutral-100">
             {user.name ?? user.email}
           </p>
-          {user.roles && user.roles.length > 0 && (
+          {user.roles && user.roles.length > 0 ? (
             <p className="truncate text-xs text-neutral-500">
               {user.roles.join(", ")}
             </p>
-          )}
+          ) : null}
         </div>
         <Button
           variant="outline"
@@ -79,5 +107,29 @@ export function DashboardHeader({ user }: DashboardHeaderProps) {
         </Button>
       </div>
     </div>
+  );
+}
+
+function HeaderLink({
+  href,
+  isActive,
+  children,
+}: {
+  href: string;
+  isActive: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+        isActive
+          ? "bg-white/10 text-white"
+          : "text-neutral-400 hover:bg-white/5 hover:text-white",
+      )}
+    >
+      {children}
+    </Link>
   );
 }
