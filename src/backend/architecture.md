@@ -61,12 +61,25 @@ Responsibilities:
 - CORS, Swagger, Problem Details, and request logging
 - transport-specific error handling
 
+Canonical API structure:
+
+```text
+LastMile.TMS.Api/
+  Configuration/
+  Controllers/
+  Diagnostics/
+  Extensions/
+  GraphQL/
+  Program.cs
+```
+
 What belongs here:
 - `Program.cs`
-- `ServiceCollectionExtensions.cs`
+- `Configuration/*`
 - `Controllers/*`
+- `Diagnostics/*`
+- `Extensions/*`
 - `GraphQL/*`
-- `GlobalExceptionHandler.cs`
 
 What does not belong here:
 - business rules

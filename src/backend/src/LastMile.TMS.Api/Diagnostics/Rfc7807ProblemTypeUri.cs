@@ -1,4 +1,4 @@
-namespace LastMile.TMS.Api;
+namespace LastMile.TMS.Api.Diagnostics;
 
 /// <summary>
 /// RFC 7231 section references for Problem Details <c>type</c> (RFC 7807).

@@ -1,3 +1,4 @@
+using LastMile.TMS.Api.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LastMile.TMS.Api.Extensions;

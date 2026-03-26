@@ -2,7 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LastMile.TMS.Api;
+namespace LastMile.TMS.Api.Diagnostics;
 
 /// <summary>
 /// RFC 7807 Problem Details for unhandled exceptions (REST). GraphQL uses its own error pipeline.

@@ -1,5 +1,6 @@
 using Hangfire;
 using Hangfire.PostgreSql;
+using LastMile.TMS.Api.Diagnostics;
 using LastMile.TMS.Api.GraphQL.Common;
 using LastMile.TMS.Api.GraphQL.Depots;
 using LastMile.TMS.Api.GraphQL.Drivers;
@@ -10,7 +11,7 @@ using LastMile.TMS.Api.GraphQL.Vehicles;
 using LastMile.TMS.Api.GraphQL.Zones;
 using Microsoft.AspNetCore.Authentication;
 
-namespace LastMile.TMS.Api;
+namespace LastMile.TMS.Api.Configuration;
 
 public static class ServiceCollectionExtensions
 {
