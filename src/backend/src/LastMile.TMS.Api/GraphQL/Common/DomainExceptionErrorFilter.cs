@@ -1,4 +1,4 @@
-namespace LastMile.TMS.Api.GraphQL;
+namespace LastMile.TMS.Api.GraphQL.Common;
 
 /// <summary>
 /// Hot Chocolate replaces resolver exceptions with "Unexpected Execution Error" in the GraphQL

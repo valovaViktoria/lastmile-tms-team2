@@ -1,6 +1,6 @@
 using LastMile.TMS.Application.Zones.DTOs;
 
-namespace LastMile.TMS.Api.GraphQL.Types;
+namespace LastMile.TMS.Api.GraphQL.Zones;
 
 public class ZoneType : ObjectType<ZoneDto>
 {

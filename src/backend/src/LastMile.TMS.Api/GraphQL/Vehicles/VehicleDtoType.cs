@@ -1,6 +1,6 @@
 using LastMile.TMS.Application.Vehicles.DTOs;
 
-namespace LastMile.TMS.Api.GraphQL.Types;
+namespace LastMile.TMS.Api.GraphQL.Vehicles;
 
 /// <summary>
 /// Explicit GraphQL object type so all <see cref="VehicleDto"/> properties (including

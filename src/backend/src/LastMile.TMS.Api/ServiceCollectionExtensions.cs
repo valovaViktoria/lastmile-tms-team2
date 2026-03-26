@@ -1,10 +1,13 @@
 using Hangfire;
 using Hangfire.PostgreSql;
-using LastMile.TMS.Api.GraphQL;
-using LastMile.TMS.Api.GraphQL.Inputs;
-using LastMile.TMS.Api.GraphQL.Mutations;
-using LastMile.TMS.Api.GraphQL.Queries;
-using LastMile.TMS.Api.GraphQL.Types;
+using LastMile.TMS.Api.GraphQL.Common;
+using LastMile.TMS.Api.GraphQL.Depots;
+using LastMile.TMS.Api.GraphQL.Drivers;
+using LastMile.TMS.Api.GraphQL.Parcels;
+using LastMile.TMS.Api.GraphQL.Routes;
+using LastMile.TMS.Api.GraphQL.Users;
+using LastMile.TMS.Api.GraphQL.Vehicles;
+using LastMile.TMS.Api.GraphQL.Zones;
 using Microsoft.AspNetCore.Authentication;
 
 namespace LastMile.TMS.Api;
@@ -37,15 +40,21 @@ public static class ServiceCollectionExtensions
         services.AddGraphQLServer()
             .AddQueryType<Query>()
             .AddMutationType<Mutation>()
+            .AddTypeExtension<DepotQuery>()
+            .AddTypeExtension<DriverQuery>()
+            .AddTypeExtension<ParcelQuery>()
+            .AddTypeExtension<RouteQuery>()
+            .AddTypeExtension<UserManagementQuery>()
+            .AddTypeExtension<VehicleQuery>()
+            .AddTypeExtension<ZoneQuery>()
+            .AddTypeExtension<DepotMutation>()
+            .AddTypeExtension<ParcelMutation>()
+            .AddTypeExtension<RouteMutation>()
+            .AddTypeExtension<UserManagementMutation>()
+            .AddTypeExtension<VehicleMutation>()
+            .AddTypeExtension<ZoneMutation>()
             .AddType<VehicleDtoType>()
             .AddType<UserRoleType>()
-            .AddTypeExtension<DepotQuery>()
-            .AddTypeExtension<ZoneQuery>()
-            .AddTypeExtension<UserManagementQuery>()
-            .AddTypeExtension<DepotMutation>()
-            .AddTypeExtension<ZoneMutation>()
-            .AddTypeExtension<ParcelMutation>()
-            .AddTypeExtension<UserManagementMutation>()
             .AddType<AddressType>()
             .AddType<OperatingHoursType>()
             .AddType<DepotType>()

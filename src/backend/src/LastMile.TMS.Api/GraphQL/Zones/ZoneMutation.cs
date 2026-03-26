@@ -1,14 +1,13 @@
 using HotChocolate;
 using HotChocolate.Authorization;
-using LastMile.TMS.Api.GraphQL.Inputs;
 using LastMile.TMS.Application.Zones.Commands;
 using LastMile.TMS.Application.Zones.DTOs;
 using MediatR;
 
-namespace LastMile.TMS.Api.GraphQL.Mutations;
+namespace LastMile.TMS.Api.GraphQL.Zones;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class ZoneMutation
+public sealed class ZoneMutation
 {
     [Authorize(Roles = new[] { "OperationsManager", "Admin" })]
     public async Task<ZoneDto> CreateZone(

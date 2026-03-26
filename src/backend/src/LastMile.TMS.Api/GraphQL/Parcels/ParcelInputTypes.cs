@@ -1,7 +1,6 @@
 using HotChocolate.Types.Descriptors;
-using LastMile.TMS.Api.GraphQL.Inputs;
 
-namespace LastMile.TMS.Api.GraphQL.Inputs;
+namespace LastMile.TMS.Api.GraphQL.Parcels;
 
 public class RegisterParcelInputType : InputObjectType<RegisterParcelInput>
 {

@@ -5,7 +5,7 @@ using LastMile.TMS.Application.Users.Queries;
 using LastMile.TMS.Domain.Enums;
 using MediatR;
 
-namespace LastMile.TMS.Api.GraphQL;
+namespace LastMile.TMS.Api.GraphQL.Users;
 
 [ExtendObjectType(OperationTypeNames.Query)]
 [Authorize(Roles = new[] { nameof(PredefinedRole.Admin) })]

@@ -2,7 +2,7 @@ using FluentValidation;
 using HotChocolate;
 using HotChocolate.Execution;
 
-namespace LastMile.TMS.Api.GraphQL;
+namespace LastMile.TMS.Api.GraphQL.Common;
 
 public sealed class GraphQLErrorFilter : IErrorFilter
 {

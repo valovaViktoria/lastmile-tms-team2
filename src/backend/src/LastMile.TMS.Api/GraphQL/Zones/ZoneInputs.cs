@@ -1,4 +1,4 @@
-namespace LastMile.TMS.Api.GraphQL.Inputs;
+namespace LastMile.TMS.Api.GraphQL.Zones;
 
 public class CreateZoneInput
 {

@@ -3,11 +3,10 @@ using HotChocolate.Authorization;
 using HotChocolate.AspNetCore.Authorization;
 using LastMile.TMS.Application.Users.Commands;
 using LastMile.TMS.Application.Users.Common;
-using LastMile.TMS.Api.GraphQL.Inputs;
 using LastMile.TMS.Domain.Enums;
 using MediatR;
 
-namespace LastMile.TMS.Api.GraphQL;
+namespace LastMile.TMS.Api.GraphQL.Users;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
 [Authorize(Roles = new[] { nameof(PredefinedRole.Admin) })]

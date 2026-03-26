@@ -1,6 +1,6 @@
 using LastMile.TMS.Application.Depots.DTOs;
 
-namespace LastMile.TMS.Api.GraphQL.Types;
+namespace LastMile.TMS.Api.GraphQL.Depots;
 
 public class AddressType : ObjectType<AddressDto>
 {

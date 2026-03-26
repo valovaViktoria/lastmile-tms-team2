@@ -1,6 +1,6 @@
 using LastMile.TMS.Domain.Enums;
 
-namespace LastMile.TMS.Api.GraphQL.Inputs;
+namespace LastMile.TMS.Api.GraphQL.Parcels;
 
 public class RegisterParcelInput
 {

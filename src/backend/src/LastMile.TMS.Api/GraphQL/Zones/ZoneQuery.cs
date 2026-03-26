@@ -3,10 +3,10 @@ using LastMile.TMS.Application.Zones.DTOs;
 using LastMile.TMS.Application.Zones.Queries;
 using MediatR;
 
-namespace LastMile.TMS.Api.GraphQL.Queries;
+namespace LastMile.TMS.Api.GraphQL.Zones;
 
 [ExtendObjectType(OperationTypeNames.Query)]
-public class ZoneQuery
+public sealed class ZoneQuery
 {
     public async Task<List<ZoneDto>> GetZones(
         [Service] ISender mediator = null!,

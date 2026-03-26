@@ -1,7 +1,7 @@
 using HotChocolate.Types.Descriptors;
 using LastMile.TMS.Application.Parcels.DTOs;
 
-namespace LastMile.TMS.Api.GraphQL.Types;
+namespace LastMile.TMS.Api.GraphQL.Parcels;
 
 public class ParcelType : ObjectType<ParcelDto>
 {

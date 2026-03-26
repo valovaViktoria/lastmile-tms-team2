@@ -1,14 +1,13 @@
 using HotChocolate;
 using HotChocolate.Authorization;
-using LastMile.TMS.Api.GraphQL.Inputs;
 using LastMile.TMS.Application.Depots.Commands;
 using LastMile.TMS.Application.Depots.DTOs;
 using MediatR;
 
-namespace LastMile.TMS.Api.GraphQL.Mutations;
+namespace LastMile.TMS.Api.GraphQL.Depots;
 
 [ExtendObjectType(OperationTypeNames.Mutation)]
-public class DepotMutation
+public sealed class DepotMutation
 {
     [Authorize(Roles = new[] { "OperationsManager", "Admin" })]
     public async Task<DepotDto> CreateDepot(

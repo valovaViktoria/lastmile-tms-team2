@@ -1,7 +1,7 @@
 using HotChocolate.Types;
 using LastMile.TMS.Domain.Enums;
 
-namespace LastMile.TMS.Api.GraphQL.Types;
+namespace LastMile.TMS.Api.GraphQL.Users;
 
 public sealed class UserRoleType : EnumType<PredefinedRole>
 {
