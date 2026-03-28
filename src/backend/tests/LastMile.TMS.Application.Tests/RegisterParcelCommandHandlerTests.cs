@@ -1,6 +1,5 @@
 using FluentAssertions;
 using LastMile.TMS.Application.Parcels.Commands;
-using LastMile.TMS.Application.Parcels.Commands.Handlers;
 using LastMile.TMS.Application.Parcels.DTOs;
 using LastMile.TMS.Application.Parcels.Services;
 using LastMile.TMS.Domain.Entities;
