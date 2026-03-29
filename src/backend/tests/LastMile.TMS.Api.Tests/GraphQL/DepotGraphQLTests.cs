@@ -7,8 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LastMile.TMS.Api.Tests.GraphQL;
 
+[Collection(ApiTestCollection.Name)]
 public class DepotGraphQLTests(CustomWebApplicationFactory factory)
-    : GraphQLTestBase(factory), IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+    : GraphQLTestBase(factory), IAsyncLifetime
 {
     [Fact]
     public async Task Depots_WithAdminToken_ReturnsFullDepotFields()

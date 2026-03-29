@@ -9,8 +9,9 @@ namespace LastMile.TMS.Api.Tests.Controllers;
 /// <summary>
 /// Integration tests for the OpenIddict /connect/token endpoint and protected endpoints.
 /// </summary>
+[Collection(ApiTestCollection.Name)]
 public class AuthTests(CustomWebApplicationFactory factory)
-    : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+    : IAsyncLifetime
 {
     private readonly HttpClient _client = factory.CreateClient(new WebApplicationFactoryClientOptions
     {

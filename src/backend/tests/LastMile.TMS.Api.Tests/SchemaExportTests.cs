@@ -8,7 +8,8 @@ namespace LastMile.TMS.Api.Tests;
 /// Exports the GraphQL schema SDL to a file for frontend codegen.
 /// Run: dotnet test --filter "SchemaExportTests"
 /// </summary>
-public class SchemaExportTests(CustomWebApplicationFactory factory) : IClassFixture<CustomWebApplicationFactory>
+[Collection(ApiTestCollection.Name)]
+public class SchemaExportTests(CustomWebApplicationFactory factory)
 {
     [Fact]
     public async Task ExportSchema_ToFile()

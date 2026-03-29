@@ -4,8 +4,9 @@ using LastMile.TMS.Persistence;
 
 namespace LastMile.TMS.Api.Tests.GraphQL;
 
+[Collection(ApiTestCollection.Name)]
 public class ZoneGraphQLTests(CustomWebApplicationFactory factory)
-    : GraphQLTestBase(factory), IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+    : GraphQLTestBase(factory), IAsyncLifetime
 {
     [Fact]
     public async Task Zones_WithAdminToken_ReturnsZones()

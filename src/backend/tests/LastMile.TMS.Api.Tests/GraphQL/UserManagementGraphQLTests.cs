@@ -16,8 +16,9 @@ using NetTopologySuite.Geometries;
 
 namespace LastMile.TMS.Api.Tests.GraphQL;
 
+[Collection(ApiTestCollection.Name)]
 public class UserManagementGraphQLTests(CustomWebApplicationFactory factory)
-    : IClassFixture<CustomWebApplicationFactory>, IAsyncLifetime
+    : IAsyncLifetime
 {
     private readonly HttpClient _client = factory.CreateClient(new WebApplicationFactoryClientOptions
     {
