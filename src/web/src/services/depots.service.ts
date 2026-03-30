@@ -19,6 +19,7 @@ export const depotsService = {
       return mockDepots.map((depot) => ({
         id: depot.id,
         name: depot.name,
+        addressId: "00000000-0000-0000-0000-000000000001",
         address: null,
         operatingHours: null,
         isActive: true,

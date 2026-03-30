@@ -20,6 +20,7 @@ type Address {
 type Depot {
   id: UUID!
   name: String!
+  addressId: UUID!
   address: Address
   operatingHours: [OperatingHours!]
   isActive: Boolean!
@@ -42,7 +43,7 @@ type Mutation @authorize(roles: [ "Admin" ]) {
   createDepot(input: CreateDepotInput!): Depot! @authorize(roles: [ "Admin", "OperationsManager" ]) @cost(weight: "10")
   updateDepot(id: UUID! input: UpdateDepotInput!): Depot @authorize(roles: [ "Admin", "OperationsManager" ]) @cost(weight: "10")
   deleteDepot(id: UUID!): Boolean! @authorize(roles: [ "Admin", "OperationsManager" ]) @cost(weight: "10")
-  registerParcel(input: RegisterParcelInput!): RegisteredParcel! @authorize(roles: [ "Admin", "Dispatcher", "OperationsManager" ]) @cost(weight: "10")
+  registerParcel(input: RegisterParcelInput!): RegisteredParcel! @authorize(roles: [ "Admin", "Dispatcher", "OperationsManager", "WarehouseOperator" ]) @cost(weight: "10")
   createRoute(input: CreateRouteInput!): Route! @authorize(roles: [ "Admin", "Dispatcher", "OperationsManager" ]) @cost(weight: "10")
   createUser(input: CreateUserInput!): UserManagementUser! @cost(weight: "10")
   updateUser(input: UpdateUserInput!): UserManagementUser! @cost(weight: "10")

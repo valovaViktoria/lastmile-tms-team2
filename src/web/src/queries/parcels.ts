@@ -1,6 +1,11 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { parcelsService } from "@/services/parcels.service";
+import type {
+  ParcelOption,
+  RegisterParcelFormData,
+  RegisteredParcelResult,
+} from "@/types/parcels";
 
 export const parcelKeys = {
   all: ["parcels"] as const,
@@ -13,5 +18,19 @@ export function useParcelsForRouteCreation() {
     queryKey: parcelKeys.forRoute(),
     queryFn: () => parcelsService.getForRouteCreation(),
     enabled: status === "authenticated",
+  });
+}
+
+export function useRegisterParcel() {
+  const qc = useQueryClient();
+  return useMutation<
+    RegisteredParcelResult,
+    Error,
+    RegisterParcelFormData
+  >({
+    mutationFn: (form: RegisterParcelFormData) => parcelsService.register(form),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: parcelKeys.all });
+    },
   });
 }
