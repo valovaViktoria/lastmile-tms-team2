@@ -15,6 +15,7 @@ type Address {
   companyName: String
   phone: String
   email: String
+  geoLocation: GeoLocation @cost(weight: "10")
 }
 
 type Depot {
@@ -36,6 +37,11 @@ type Driver {
   email: String
   depotId: UUID!
   status: DriverStatus!
+}
+
+type GeoLocation {
+  latitude: Float!
+  longitude: Float!
 }
 
 type Mutation @authorize(roles: [ "Admin" ]) {
@@ -193,6 +199,7 @@ type Zone {
   id: UUID!
   name: String!
   boundary: String @cost(weight: "10")
+  boundaryGeoJson: String @cost(weight: "10")
   isActive: Boolean!
   depotId: UUID!
   depotName: String @cost(weight: "10")
