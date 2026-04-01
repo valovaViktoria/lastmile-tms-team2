@@ -37,6 +37,32 @@ function buildApiUrl(path: string): string {
   return `${apiBaseUrl().replace(/\/$/, "")}${path}`;
 }
 
+function extractFileName(
+  contentDisposition: string | null,
+  fallbackFileName: string,
+): string {
+  if (!contentDisposition) {
+    return fallbackFileName;
+  }
+
+  const utf8Match = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+  if (utf8Match?.[1]) {
+    return decodeURIComponent(utf8Match[1]);
+  }
+
+  const quotedMatch = contentDisposition.match(/filename="([^"]+)"/i);
+  if (quotedMatch?.[1]) {
+    return quotedMatch[1];
+  }
+
+  const plainMatch = contentDisposition.match(/filename=([^;]+)/i);
+  if (plainMatch?.[1]) {
+    return plainMatch[1].trim();
+  }
+
+  return fallbackFileName;
+}
+
 async function authenticatedRequest(
   path: string,
   init: RequestInit = {},
@@ -59,6 +85,28 @@ async function authenticatedRequest(
   }
 
   return response;
+}
+
+async function triggerDownload(
+  response: Response,
+  fallbackFileName: string,
+): Promise<void> {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  const blob = await response.blob();
+  const downloadUrl = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = downloadUrl;
+  link.download = extractFileName(
+    response.headers.get("Content-Disposition"),
+    fallbackFileName,
+  );
+  document.body.append(link);
+  link.click();
+  link.remove();
+  window.URL.revokeObjectURL(downloadUrl);
 }
 
 export const parcelsService = {
@@ -299,7 +347,12 @@ export const parcelsService = {
       return;
     }
 
-    await downloadAuthenticatedFile(`/api/parcel-imports/template.${format}`);
+    const response = await authenticatedRequest(
+      `/api/parcel-imports/template.${format}`,
+      { method: "GET" },
+    );
+
+    await triggerDownload(response, `parcel-import-template.${format}`);
   },
 
   downloadParcelImportErrors: async (id: string): Promise<void> => {
@@ -307,6 +360,11 @@ export const parcelsService = {
       return;
     }
 
-    await downloadAuthenticatedFile(`/api/parcel-imports/${id}/errors.csv`);
+    const response = await authenticatedRequest(
+      `/api/parcel-imports/${id}/errors.csv`,
+      { method: "GET" },
+    );
+
+    await triggerDownload(response, "parcel-import-errors.csv");
   },
 };
