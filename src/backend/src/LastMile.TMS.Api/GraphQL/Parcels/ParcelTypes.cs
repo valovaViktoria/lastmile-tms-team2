@@ -42,7 +42,6 @@ public sealed class ParcelChangeHistoryType : ObjectType<ParcelChangeHistoryDto>
         descriptor.BindFieldsImplicitly();
     }
 }
-
 public sealed class ParcelImportHistoryType : ObjectType<ParcelImportHistoryDto>
 {
     protected override void Configure(IObjectTypeDescriptor<ParcelImportHistoryDto> descriptor)
