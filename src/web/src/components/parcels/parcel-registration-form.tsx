@@ -98,7 +98,7 @@ export function ParcelRegistrationForm({
   const depotOptions: SelectOption<string>[] = depots
     .filter((d) => d.isActive)
     .map((d) => ({
-      value: d.id,
+      value: d.addressId,
       label: d.name,
     }));
 
@@ -247,7 +247,7 @@ export function ParcelRegistrationForm({
           <CardContent className="grid gap-4 md:grid-cols-2">
             <div className="md:col-span-2">
               <Label htmlFor="shipperAddressId" className="mb-1.5 block">
-                Depot
+                Select Depot
               </Label>
               {depotsLoading ? (
                 <Input disabled placeholder="Loading depots..." />
@@ -267,7 +267,9 @@ export function ParcelRegistrationForm({
                 </p>
               )}
               {form.shipperAddressId && (() => {
-                const selected = depots.find(d => d.id === form.shipperAddressId);
+                const selected = depots.find(
+                  (d) => d.addressId === form.shipperAddressId,
+                );
                 if (!selected?.address) return null;
                 const a = selected.address;
                 return (
