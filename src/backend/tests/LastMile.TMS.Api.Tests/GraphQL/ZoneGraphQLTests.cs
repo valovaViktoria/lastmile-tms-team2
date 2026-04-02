@@ -9,11 +9,14 @@ using NetTopologySuite.Geometries;
 namespace LastMile.TMS.Api.Tests.GraphQL;
 
 [Collection(ApiTestCollection.Name)]
-public class ZoneGraphQLTests(CustomWebApplicationFactory factory)
-    : GraphQLTestBase(factory), IAsyncLifetime
+public class ZoneGraphQLTests : GraphQLTestBase, IAsyncLifetime
 {
     private static readonly GeometryFactory GeometryFactory =
         NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
+
+    public ZoneGraphQLTests(CustomWebApplicationFactory factory) : base(factory)
+    {
+    }
 
     [Fact]
     public async Task Zones_WithAdminToken_ReturnsBoundaryGeoJson()
@@ -60,13 +63,13 @@ public class ZoneGraphQLTests(CustomWebApplicationFactory factory)
         boundaryGeoJson.RootElement.GetProperty("coordinates")[0].GetArrayLength().Should().BeGreaterThanOrEqualTo(4);
     }
 
-    public Task InitializeAsync() => factory.ResetDatabaseAsync();
+    public Task InitializeAsync() => Factory.ResetDatabaseAsync();
 
     public Task DisposeAsync() => Task.CompletedTask;
 
     private async Task<Guid> SeedZoneAsync()
     {
-        await using var scope = factory.Services.CreateAsyncScope();
+        await using var scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var depot = new Depot

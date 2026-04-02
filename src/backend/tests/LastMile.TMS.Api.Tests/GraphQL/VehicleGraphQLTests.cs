@@ -8,9 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 namespace LastMile.TMS.Api.Tests.GraphQL;
 
 [Collection(ApiTestCollection.Name)]
-public class VehicleGraphQLTests(CustomWebApplicationFactory factory)
-    : GraphQLTestBase(factory), IAsyncLifetime
+public class VehicleGraphQLTests : GraphQLTestBase, IAsyncLifetime
 {
+    public VehicleGraphQLTests(CustomWebApplicationFactory factory) : base(factory)
+    {
+    }
+
     [Fact]
     public async Task Vehicles_WithoutToken_ReturnsAuthorizationError()
     {
@@ -214,7 +217,7 @@ public class VehicleGraphQLTests(CustomWebApplicationFactory factory)
         var vehicleAId = await SeedVehicleAsync($"VEH-A-{Guid.NewGuid():N}"[..20], VehicleStatus.Available);
         var vehicleBId = await SeedVehicleAsync($"VEH-B-{Guid.NewGuid():N}"[..20], VehicleStatus.Available);
 
-        await using var scope = factory.Services.CreateAsyncScope();
+        await using var scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         var vehicleA = await dbContext.Vehicles.FindAsync(vehicleAId);
         vehicleA.Should().NotBeNull();
@@ -378,13 +381,13 @@ public class VehicleGraphQLTests(CustomWebApplicationFactory factory)
         errors[0].GetProperty("message").GetString().Should().Contain("active routes");
     }
 
-    public Task InitializeAsync() => factory.ResetDatabaseAsync();
+    public Task InitializeAsync() => Factory.ResetDatabaseAsync();
 
     public Task DisposeAsync() => Task.CompletedTask;
 
     private async Task<Guid> SeedVehicleAsync(string plate, VehicleStatus status)
     {
-        await using var scope = factory.Services.CreateAsyncScope();
+        await using var scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var vehicle = new Vehicle
@@ -406,7 +409,7 @@ public class VehicleGraphQLTests(CustomWebApplicationFactory factory)
 
     private async Task SeedRouteAsync(Guid vehicleId, RouteStatus status, int startMileage, int endMileage = 0)
     {
-        await using var scope = factory.Services.CreateAsyncScope();
+        await using var scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var route = new Route
