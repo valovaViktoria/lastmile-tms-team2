@@ -5,6 +5,7 @@ import {
   Map,
   Route,
   Truck,
+  UserCircle,
   Users,
 } from "lucide-react";
 
@@ -19,6 +20,7 @@ export const dashboardNavItems: readonly DashboardNavItem[] = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/users", label: "Users", icon: Users, requiredRoles: ["Admin"] },
   { href: "/vehicles", label: "Vehicles", icon: Truck },
+  { href: "/drivers", label: "Drivers", icon: UserCircle },
   { href: "/routes", label: "Routes", icon: Route },
   { href: "/zones", label: "Zones", icon: Map },
   { href: "/depots", label: "Depots", icon: Building2 },

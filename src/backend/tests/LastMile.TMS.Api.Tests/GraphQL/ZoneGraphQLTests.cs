@@ -5,9 +5,12 @@ using LastMile.TMS.Persistence;
 namespace LastMile.TMS.Api.Tests.GraphQL;
 
 [Collection(ApiTestCollection.Name)]
-public class ZoneGraphQLTests(CustomWebApplicationFactory factory)
-    : GraphQLTestBase(factory), IAsyncLifetime
+public class ZoneGraphQLTests : GraphQLTestBase, IAsyncLifetime
 {
+    public ZoneGraphQLTests(CustomWebApplicationFactory factory) : base(factory)
+    {
+    }
+
     [Fact]
     public async Task Zones_WithAdminToken_ReturnsZones()
     {
@@ -47,7 +50,7 @@ public class ZoneGraphQLTests(CustomWebApplicationFactory factory)
         zones.Should().NotBeEmpty();
     }
 
-    public Task InitializeAsync() => factory.ResetDatabaseAsync();
+    public Task InitializeAsync() => Factory.ResetDatabaseAsync();
 
     public Task DisposeAsync() => Task.CompletedTask;
 }

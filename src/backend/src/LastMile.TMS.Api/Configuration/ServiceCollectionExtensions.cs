@@ -55,6 +55,7 @@ public static class ServiceCollectionExtensions
             .AddTypeExtension<VehicleQueries>()
             .AddTypeExtension<ZoneQueries>()
             .AddTypeExtension<DepotMutations>()
+            .AddTypeExtension<DriverMutations>()
             .AddTypeExtension<ParcelMutations>()
             .AddTypeExtension<RouteMutations>()
             .AddTypeExtension<UserManagementMutations>()
