@@ -60,7 +60,7 @@ try
         app.UseHangfireDashboard("/hangfire", HangfireDashboardConfiguration.CreateOptions(builder.Configuration));
         RecurringJob.AddOrUpdate<DriverPhotoOrphanCleanupJob>(
             "driver-photo-orphan-cleanup",
-            job => job.ExecuteAsync(CancellationToken.None),
+            job => job.ExecuteAsync(JobCancellationToken.Null),
             Cron.Daily());
     }
 

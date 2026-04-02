@@ -1,3 +1,4 @@
+using Hangfire;
 using LastMile.TMS.Application.Common.Interfaces;
 
 namespace LastMile.TMS.Infrastructure.Services;
@@ -7,6 +8,6 @@ namespace LastMile.TMS.Infrastructure.Services;
 /// </summary>
 public sealed class DriverPhotoOrphanCleanupJob(IDriverPhotoFileCleanup driverPhotoFileCleanup)
 {
-    public Task ExecuteAsync(CancellationToken cancellationToken = default) =>
-        driverPhotoFileCleanup.DeleteOrphanDriverPhotosAsync(cancellationToken);
+    public Task ExecuteAsync(IJobCancellationToken cancellationToken) =>
+        driverPhotoFileCleanup.DeleteOrphanDriverPhotosAsync(cancellationToken.ShutdownToken);
 }
