@@ -10,9 +10,12 @@ using NetTopologySuite.Geometries;
 namespace LastMile.TMS.Api.Tests.GraphQL;
 
 [Collection(ApiTestCollection.Name)]
-public class DepotGraphQLTests(CustomWebApplicationFactory factory)
-    : GraphQLTestBase(factory), IAsyncLifetime
+public class DepotGraphQLTests : GraphQLTestBase, IAsyncLifetime
 {
+    public DepotGraphQLTests(CustomWebApplicationFactory factory) : base(factory)
+    {
+    }
+
     private static readonly GeometryFactory GeometryFactory =
         NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
@@ -92,7 +95,7 @@ public class DepotGraphQLTests(CustomWebApplicationFactory factory)
 
         var depotId = depot.GetProperty("id").GetGuid();
 
-        await using var scope = factory.Services.CreateAsyncScope();
+        await using var scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var persistedDepot = await dbContext.Depots
@@ -160,7 +163,7 @@ public class DepotGraphQLTests(CustomWebApplicationFactory factory)
         document.RootElement.TryGetProperty("errors", out var errors).Should().BeTrue();
         errors[0].GetProperty("message").GetString().Should().Contain("duplicate days");
 
-        await using var scope = factory.Services.CreateAsyncScope();
+        await using var scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         (await dbContext.Depots.AnyAsync(d => d.Name == depotName)).Should().BeFalse();
     }
@@ -331,7 +334,7 @@ public class DepotGraphQLTests(CustomWebApplicationFactory factory)
         var depotId = await SeedDepotAsync();
         var token = await GetAdminAccessTokenAsync();
 
-        await using var initialScope = factory.Services.CreateAsyncScope();
+        await using var initialScope = Factory.Services.CreateAsyncScope();
         var initialDbContext = initialScope.ServiceProvider.GetRequiredService<AppDbContext>();
         var originalHours = await initialDbContext.Depots
             .Include(d => d.OperatingHours)
@@ -393,7 +396,7 @@ public class DepotGraphQLTests(CustomWebApplicationFactory factory)
         operatingHours[0].GetProperty("closedTime").GetString().Should().Be("PT18H15M");
         operatingHours[0].GetProperty("isClosed").GetBoolean().Should().BeFalse();
 
-        await using var scope = factory.Services.CreateAsyncScope();
+        await using var scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var persistedDepot = await dbContext.Depots
@@ -464,7 +467,7 @@ public class DepotGraphQLTests(CustomWebApplicationFactory factory)
 
         document.RootElement.TryGetProperty("errors", out _).Should().BeFalse(document.RootElement.GetRawText());
 
-        await using var scope = factory.Services.CreateAsyncScope();
+        await using var scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var persistedDepot = await dbContext.Depots
@@ -531,7 +534,7 @@ public class DepotGraphQLTests(CustomWebApplicationFactory factory)
         errors[0].GetProperty("message").GetString().Should().Contain("duplicate days");
     }
 
-    public Task InitializeAsync() => factory.ResetDatabaseAsync();
+    public Task InitializeAsync() => Factory.ResetDatabaseAsync();
 
     public Task DisposeAsync() => Task.CompletedTask;
 
@@ -543,7 +546,7 @@ public class DepotGraphQLTests(CustomWebApplicationFactory factory)
 
     private async Task<Guid> SeedDepotAsync(IEnumerable<OperatingHours>? operatingHours = null)
     {
-        await using var scope = factory.Services.CreateAsyncScope();
+        await using var scope = Factory.Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
         var depot = new Depot

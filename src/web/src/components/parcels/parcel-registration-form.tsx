@@ -19,10 +19,7 @@ import {
   ParcelWeightUnit,
   ParcelWeightUnitOptions,
 } from "@/types/parcels";
-import type {
-  GraphQLServiceType,
-  RegisteredParcelResult,
-} from "@/types/parcels";
+import type { GraphQLServiceType, RegisteredParcelResult } from "@/types/parcels";
 
 type ParcelFormState = {
   // Shipper

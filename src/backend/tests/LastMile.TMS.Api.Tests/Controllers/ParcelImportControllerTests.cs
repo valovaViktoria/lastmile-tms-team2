@@ -36,6 +36,20 @@ public class ParcelImportControllerTests(CustomWebApplicationFactory factory)
     }
 
     [Fact]
+    public async Task Upload_WithOversizedFile_ReturnsPayloadTooLarge()
+    {
+        var request = await CreateUploadRequestAsync(
+            fileName: "parcels.csv",
+            fileBytes: new byte[(10 * 1024 * 1024) + 1]);
+
+        var response = await _client.SendAsync(request);
+
+        response.StatusCode.Should().Be((HttpStatusCode)413);
+        var content = await response.Content.ReadAsStringAsync();
+        content.Should().Contain("10 MB");
+    }
+
+    [Fact]
     public async Task DownloadTemplateCsv_ReturnsCanonicalHeaderRow()
     {
         var request = new HttpRequestMessage(HttpMethod.Get, "/api/parcel-imports/template.csv");
@@ -105,6 +119,11 @@ public class ParcelImportControllerTests(CustomWebApplicationFactory factory)
     private async Task<HttpRequestMessage> CreateUploadRequestAsync(
         string fileName,
         string fileContent)
+        => await CreateUploadRequestAsync(fileName, Encoding.UTF8.GetBytes(fileContent));
+
+    private async Task<HttpRequestMessage> CreateUploadRequestAsync(
+        string fileName,
+        byte[] fileBytes)
     {
         var request = new HttpRequestMessage(HttpMethod.Post, "/api/parcel-imports");
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", await GetAdminAccessTokenAsync());
@@ -114,7 +133,7 @@ public class ParcelImportControllerTests(CustomWebApplicationFactory factory)
             new StringContent(DbSeeder.TestDepotAddressId.ToString()),
             "shipperAddressId");
         content.Add(
-            new ByteArrayContent(Encoding.UTF8.GetBytes(fileContent)),
+            new ByteArrayContent(fileBytes),
             "file",
             fileName);
 

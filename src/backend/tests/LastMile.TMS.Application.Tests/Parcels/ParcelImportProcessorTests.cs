@@ -14,9 +14,9 @@ public class ParcelImportProcessorTests
 {
     private static readonly GeometryFactory GeoFactory = new(new PrecisionModel(), 4326);
 
-    private static AppDbContext MakeDbContext()
+    private static CountingAppDbContext MakeDbContext()
     {
-        return new AppDbContext(
+        return new CountingAppDbContext(
             new DbContextOptionsBuilder<AppDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options);
@@ -221,6 +221,66 @@ public class ParcelImportProcessorTests
 
         importedParcel.CreatedBy.Should().Be("ops.manager");
         importedParcel.RecipientAddress.CreatedBy.Should().Be("ops.manager");
+    }
+
+    [Fact]
+    public async Task ProcessAsync_WithManyInvalidRows_BatchesProgressSaves()
+    {
+        var db = MakeDbContext();
+
+        var parcelImport = new ParcelImport
+        {
+            FileName = "parcels.csv",
+            FileFormat = ParcelImportFileFormat.Csv,
+            ShipperAddressId = Guid.NewGuid(),
+            Status = ParcelImportStatus.Queued,
+            SourceFile = [1, 2, 3],
+            CreatedBy = "ops.manager",
+        };
+        db.ParcelImports.Add(parcelImport);
+        await db.SaveChangesAsync();
+        db.ResetSaveChangesCalls();
+
+        var parser = Substitute.For<IParcelImportFileParser>();
+        parser.ParseAsync(
+                Arg.Any<string>(),
+                Arg.Any<byte[]>(),
+                Arg.Any<CancellationToken>())
+            .Returns(new ParcelImportParsedFile(
+                100,
+                Enumerable.Range(1, 100)
+                    .Select(index => new ParcelImportParsedRow(
+                        index,
+                        CreateRow(
+                            street1: $"Invalid Street {index}",
+                            weight: "abc")))
+                    .ToArray()));
+
+        var registrationService = Substitute.For<IParcelRegistrationService>();
+        var processor = new ParcelImportProcessor(db, parser, registrationService);
+
+        await processor.ProcessAsync(parcelImport.Id, CancellationToken.None);
+
+        db.SaveChangesCalls.Should().BeLessThan(20);
+        await registrationService.DidNotReceiveWithAnyArgs()
+            .RegisterAsync(default!, default, default, default);
+    }
+
+    private sealed class CountingAppDbContext(DbContextOptions<AppDbContext> options)
+        : AppDbContext(options)
+    {
+        public int SaveChangesCalls { get; private set; }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            SaveChangesCalls++;
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+        public void ResetSaveChangesCalls()
+        {
+            SaveChangesCalls = 0;
+        }
     }
 
     private static Dictionary<string, string?> CreateRow(

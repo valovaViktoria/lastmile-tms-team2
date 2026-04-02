@@ -13,6 +13,7 @@ public sealed class ParcelImportProcessor(
     IParcelImportFileParser parser,
     IParcelRegistrationService registrationService)
 {
+    private const int ProgressSaveBatchSize = 25;
     private readonly RegisterParcelCommandValidator _validator = new();
 
     public async Task ProcessAsync(Guid parcelImportId, CancellationToken cancellationToken = default)
@@ -86,7 +87,11 @@ public sealed class ParcelImportProcessor(
                 {
                     parcelImport.ProcessedRows++;
                     parcelImport.RejectedRows = parcelImport.RowFailures.Count;
-                    await db.SaveChangesAsync(cancellationToken);
+
+                    if (ShouldSaveProgress(parcelImport.ProcessedRows, parcelImport.TotalRows))
+                    {
+                        await db.SaveChangesAsync(cancellationToken);
+                    }
                 }
             }
 
@@ -96,7 +101,6 @@ public sealed class ParcelImportProcessor(
                 _ => ParcelImportStatus.CompletedWithErrors,
             };
             parcelImport.CompletedAt = DateTimeOffset.UtcNow;
-            parcelImport.RejectedRows = parcelImport.RowFailures.Count;
             await db.SaveChangesAsync(cancellationToken);
         }
         catch (OperationCanceledException)
@@ -126,5 +130,11 @@ public sealed class ParcelImportProcessor(
                 OriginalRowValues = JsonSerializer.Serialize(row.Values),
                 ErrorMessage = errorMessage,
             });
+    }
+
+    private static bool ShouldSaveProgress(int processedRows, int totalRows)
+    {
+        return processedRows == totalRows
+            || processedRows % ProgressSaveBatchSize == 0;
     }
 }

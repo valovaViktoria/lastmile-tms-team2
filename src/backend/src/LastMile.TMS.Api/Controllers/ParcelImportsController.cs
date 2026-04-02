@@ -18,6 +18,8 @@ public sealed class ParcelImportsController(
     ISender mediator,
     IParcelImportTemplateGenerator templateGenerator) : ControllerBase
 {
+    private const long MaxUploadFileSizeBytes = 10 * 1024 * 1024;
+
     [HttpPost]
     [Consumes("multipart/form-data")]
     public async Task<IActionResult> Upload(
@@ -32,6 +34,13 @@ public sealed class ParcelImportsController(
         if (request.File.Length == 0)
         {
             return BadRequest("The uploaded file is empty.");
+        }
+
+        if (request.File.Length > MaxUploadFileSizeBytes)
+        {
+            return StatusCode(
+                StatusCodes.Status413PayloadTooLarge,
+                "The uploaded file exceeds the 10 MB limit.");
         }
 
         ParcelImportFileFormat fileFormat;

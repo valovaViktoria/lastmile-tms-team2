@@ -18,6 +18,8 @@ public static class DependencyInjection
 
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IDriverPhotoFileCleanup, DriverPhotoFileCleanup>();
+        services.AddScoped<DriverPhotoOrphanCleanupJob>();
         services.AddScoped<FrontendBaseUrlResolver>();
         services.AddScoped<IZoneBoundaryParser, ZoneBoundaryParser>();
         services.AddScoped<IParcelImportFileParser, ParcelImportFileParser>();
